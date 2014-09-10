@@ -8,15 +8,27 @@ class CreateTokenTable
 {
   public function up()
   {
-    Schema::create("token", function (Blueprint $table) {
-      $table->string("email")->index();
-      $table->string("token")->index();
-      $table->timestamp("created_at");
+    	Schema::create("token", function(Blueprint $table) 
+        {
+		$table
+		->string("email") 
+		->nullable() 
+		->default(null);
+		
+		$table
+		->string("token") 
+		->nullable() 
+		->default(null);
+		
+		$table
+        ->timestamp("created_at")
+        ->nullable() 
+        ->default(null);
     });
   }
 
   public function down()
   {
-    Schema::drop("token");
+   	Schema::dropIfExists("token");
   }
 }
