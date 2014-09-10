@@ -3,7 +3,7 @@
 class UserController
   extends Controller
 {
-  public function login()
+  public function loginAction()
   {
     if ($this->isPostRequest()) {
       $validator = $this->getLoginValidator();
