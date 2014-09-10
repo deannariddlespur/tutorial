@@ -1,10 +1,72 @@
 <?php
+/*
+	|--------------------------------------------------------------------------
+ 
+     |The first thing we’ve done is to declare a new MessageBag instance. We do this because the view will still check for the errors MessageBag, whether or 
+     |not it has been saved to the session. If it is, however, in the session; we overwrite the 
+     new instance we created with the stored instance.
+     |We then add it to the $data array so that it is passed to the view, and can be rendered.
+     |If the validation fails; we save the username to the $data array, along with the validation errors,
+     |and we redirect back to the same route (also using the withInput() method to store our data to the session
+*/
+use Illuminate\Support\MessageBag;
 
 class UserController
   extends Controller
 {
   public function loginAction()
   {
+     $errors = new MessageBag();
+     
+     if ($old = Input::old("errors"))
+     {
+     	$errors = $old;
+     }
+     $data = [
+        "errors" => $errors
+    ];
+    
+    if (Input::server("REQUEST_METHOD") == "POST")
+    {
+      $validator = Validator::make(Input::all(), [
+         "username" => "required",
+         "password" => "required"
+    ]);
+    
+    if ($validator->passes())
+    {
+       $credentials = [
+          "username" => Input::get("username"),
+          "password" => Input::get("password")
+    ];
+    
+    if ( Auth::attempt($credentials))
+    {
+        return Redirect::route("user/profile");
+    }
+    }
+    
+    
+    
+     
+        $data["errors"] = new MessageBag([
+          "password" => [
+              "Username and/or password invalid."
+              ]
+        ]);
+        
+        $data["username"] = Input::get("username");
+        
+        return Redirect::route("user/login")
+           ->withInput($data);
+    }
+
+
+  return View::make("user/login",$data);
+    }
+}
+  
+         
     if ($this->isPostRequest()) {
       $validator = $this->getLoginValidator();
 

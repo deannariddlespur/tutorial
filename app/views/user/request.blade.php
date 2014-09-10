@@ -1,14 +1,17 @@
 @extends("layout")
 @section("content")
-  {{ Form::open() }}
-    @if (Session::get("error"))
-      {{ Session::get("error") }}<br />
-    @endif
-    @if (Session::get("status"))
-      {{ Session::get("status") }}<br />
-    @endif
-    {{ Form::label("email", "Email") }}
-    {{ Form::text("email", Input::old("email")) }}
-    {{ Form::submit("reset") }}
-  {{ Form::close() }}
+    {{ Form::open([
+        "route"        => "user/request",
+        "autocomplete" => "off"
+    ]) }}
+        {{ Form::label("email", "Email") }}
+        {{ Form::text("email", Input::get("email"), [
+            "placeholder" => "john@example.com"
+        ]) }}
+        {{ Form::submit("reset") }}
+    {{ Form::close() }}
+@stop
+@section("footer")
+@parent
+<script src="//polyfill.io"></script> 
 @stop
